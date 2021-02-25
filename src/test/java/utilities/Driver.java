@@ -1,76 +1,54 @@
 package utilities;
 
-import com.google.common.base.Function;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.Assert;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.support.ui.*;
 
+
+import io.github.bonigarcia.wdm.OperaDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.safari.SafariDriver;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 public class Driver {
-
     private Driver() {
 
     }
 
-    static WebDriver driver;
+    static private WebDriver driver;
+    static public WebDriver getDriver(){
 
-    public static WebDriver getDriver() {
-        if (driver == null) {
-            switch (ConfigurationReader.getProperty("browser")) {
+        if(driver==null){
+            switch (ConfigurationReader.getProperty("browser")){
                 case "chrome":
                     WebDriverManager.chromedriver().setup();
-                    ;
-                    driver = new ChromeDriver();
+                    driver=new ChromeDriver();
                     break;
-
                 case "firefox":
                     WebDriverManager.firefoxdriver().setup();
-                    driver = new FirefoxDriver();
-                    break;
-                case "ie":
-                    WebDriverManager.iedriver().setup();
-                    driver = new InternetExplorerDriver();
+                    driver=new FirefoxDriver();
                     break;
                 case "safari":
-                    WebDriverManager.getInstance(SafariDriver.class).setup();
-                    driver = new SafariDriver();
+                    WebDriverManager.getInstance(SafariDriver.class);
+                    driver=new SafariDriver();
                     break;
-                case "handless=chrome":
-                    WebDriverManager.chromedriver().setup();
-                    driver = new ChromeDriver(new ChromeOptions().setHeadless(true));
+                case "opera":
+                    OperaDriverManager.operadriver().setup();
+                    driver=new OperaDriver();
                     break;
             }
         }
-        driver.manage().window().maximize();
+        //driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         return driver;
     }
 
-    public static void closeDriver() {
-        if (driver != null) {
-            driver.quit();
-            driver = null;
+    static public void closeDriver(){
+
+        if (driver != null){
+            driver.close();
+            driver=null;
         }
-    }
-
-}
-
-
-
-
-
-
-
-
+    }}
